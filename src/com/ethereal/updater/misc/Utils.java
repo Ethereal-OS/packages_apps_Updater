@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.os.SystemProperties;
 import android.os.storage.StorageManager;
 import android.util.Log;
@@ -114,8 +113,7 @@ public class Utils {
     }
 
     public static boolean isCompatible(UpdateBaseInfo update) {
-        if (!SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) &&
-                update.getTimestamp() <= SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) {
+        if (update.getTimestamp() <= SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) {
             Log.d(TAG, update.getName() + " is older than/equal to the current build");
             return false;
         }
@@ -123,8 +121,7 @@ public class Utils {
     }
 
     public static boolean canInstall(UpdateBaseInfo update) {
-        return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||
-                update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0));
+        return update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0);
     }
 
     public static List<UpdateInfo> parseJson(File file, boolean compatibleOnly)
@@ -160,8 +157,7 @@ public class Utils {
     }
 
     public static String getServerURL(Context context) {
-        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
+        String device = SystemProperties.get(Constants.PROP_DEVICE);
 
         String serverUrl = context.getString(R.string.updater_server_url);
 
@@ -189,23 +185,15 @@ public class Utils {
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
-        Network activeNetwork = cm.getActiveNetwork();
-        NetworkCapabilities networkCapabilities = cm.getNetworkCapabilities(activeNetwork);
-        if (networkCapabilities != null &&
-                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
-            return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_USB)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
-                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
-        }
-        return false;
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return !(info == null || !info.isConnected() || !info.isAvailable());
     }
 
-    public static boolean isNetworkMetered(Context context) {
+    public static boolean isOnWifiOrEthernet(Context context) {
         ConnectivityManager cm = context.getSystemService(ConnectivityManager.class);
-        return cm.isActiveNetworkMetered();
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return (info != null && (info.getType() == ConnectivityManager.TYPE_ETHERNET
+                || info.getType() == ConnectivityManager.TYPE_WIFI));
     }
 
     /**
@@ -353,6 +341,10 @@ public class Utils {
             }
         }
         throw new IllegalStateException();
+    }
+
+    public static boolean isABDevice() {
+        return SystemProperties.getBoolean(Constants.PROP_AB_DEVICE, false);
     }
 
     public static boolean isABUpdate(ZipFile zipFile) {
