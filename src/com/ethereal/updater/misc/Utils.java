@@ -67,7 +67,7 @@ public class Utils {
     private static String mModem;
     private static String mBootloader;
     private static String mRecovery;
-    private static String mPaypal;
+    private static String mBuymeacoffee;
 
     private Utils() {
     }
@@ -109,7 +109,7 @@ public class Utils {
         mModem = object.getString("modem");
         mBootloader = object.getString("bootloader");
         mRecovery = object.getString("recovery");
-        mPaypal = object.getString("paypal");
+        mBuymeacoffee = object.getString("buymeacoffee");
         return update;
     }
 
@@ -443,7 +443,7 @@ public class Utils {
         return mRecovery;
     }
 
-    public static String getPaypal() {
-        return mPaypal;
+    public static String getBuymeacoffee() {
+        return mBuymeacoffee;
     }
 }

@@ -545,18 +545,18 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
             });
         }
 
-        ImageView paypalImage = findViewById(R.id.support_paypal);
-        String paypal = Utils.getPaypal();
-        if (paypal == null || recovery.isEmpty()) {
-            paypalImage.setVisibility(View.GONE);
+        ImageView buymeacoffeeImage = findViewById(R.id.support_buymeacoffee);
+        String buymeacoffee = Utils.getBuymeacoffee();
+        if (buymeacoffee == null || recovery.isEmpty()) {
+            buymeacoffeeImage.setVisibility(View.GONE);
         } else {
-            paypalImage.setVisibility(View.VISIBLE);
-            paypalImage.setOnClickListener(new View.OnClickListener() {
+            buymeacoffeeImage.setVisibility(View.VISIBLE);
+            buymeacoffeeImage.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(paypal));
+                    intent.setData(Uri.parse(buymeacoffee));
                     startActivity(intent);
                     }
             });
