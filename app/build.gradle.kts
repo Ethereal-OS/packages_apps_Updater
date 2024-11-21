@@ -1,7 +1,7 @@
 import java.util.Properties
-import com.voltage.generatebp.GenerateBpPlugin
-import com.voltage.generatebp.GenerateBpPluginExtension
-import com.voltage.generatebp.models.Module
+import com.ethereal.generatebp.GenerateBpPlugin
+import com.ethereal.generatebp.GenerateBpPluginExtension
+import com.ethereal.generatebp.models.Module
 
 plugins {
     id("com.android.application")
@@ -18,7 +18,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.voltage:gradle-generatebp:+")
+        classpath("com.ethereal:gradle-generatebp:+")
     }
 }
 
@@ -31,10 +31,10 @@ val keystoreProperties = Properties().apply {
 
 android {
     compileSdk = 34
-    namespace = "com.voltage.updater"
+    namespace = "com.ethereal.updater"
 
     defaultConfig {
-        applicationId = "com.voltage.updater"
+        applicationId = "com.ethereal.updater"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
