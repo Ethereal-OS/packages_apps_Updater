@@ -76,7 +76,8 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp"
                     tools:text="Android 13"/>
-
+                    
+		<TextView
                     android:layout_gravity="center_vertical|end"
                     android:layout_margin="32dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
